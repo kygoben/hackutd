@@ -8,11 +8,116 @@ class LessonPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Lessons for Module $moduleNumber'),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color.fromARGB(255, 133, 231, 136), Colors.lightGreen],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              // Top row with back button, progress bar, and hearts
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildCloseButton(context),
+                    Expanded(
+                      child: _buildProgressBar(),
+                    ),
+                    _buildHeartCount(context, heartCount: 5),
+                  ],
+                ),
+              ),
+              SizedBox(height: 24),
+              _buildCard(context, 'Question 1 of 5'),
+              _buildCard(context,
+                  'This is an example question, what is the answer for it?'),
+              SizedBox(height: 24),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  children: [
+                    _buildOption(context, 'Option 1'),
+                    _buildOption(context, 'Option 2'),
+                    _buildOption(context, 'Option 3'),
+                    _buildOption(context, 'Option 4'),
+                  ],
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.green),
+                  child: Text('Next Question'),
+                  onPressed: () {
+                    // Handle next question action
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
-      body: Center(
-        child: Text('Content for Module $moduleNumber'),
+    );
+  }
+
+  Widget _buildCloseButton(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.close, color: Colors.green),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget _buildProgressBar() {
+    return LinearProgressIndicator(
+      value: 0.2, // Current progress
+      backgroundColor: Colors.grey[300],
+      valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+    );
+  }
+
+  Widget _buildHeartCount(BuildContext context, {required int heartCount}) {
+    return Row(
+      children: [
+        Icon(Icons.favorite, color: Colors.red),
+        SizedBox(width: 8),
+        Text('$heartCount', style: TextStyle(color: Colors.green)),
+      ],
+    );
+  }
+
+  Widget _buildOption(BuildContext context, String option) {
+    return Card(
+      color: Colors.white,
+      margin: EdgeInsets.symmetric(vertical: 4),
+      child: ListTile(
+        title: Text(option, style: TextStyle(color: Colors.green)),
+        onTap: () {
+          // Handle option tap action
+        },
+      ),
+    );
+  }
+
+  Widget _buildCard(BuildContext context, String text) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          text,
+          style: TextStyle(color: Colors.green),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
