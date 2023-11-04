@@ -1,28 +1,22 @@
-import 'dart:math';
 import 'package:finteach/Presentation/lesson_page.dart';
 import 'package:finteach/Presentation/practice_page.dart';
 import 'package:flutter/material.dart';
 import 'package:finteach/Application/constants.dart';
 
 class ModuleList extends StatelessWidget {
-  final Random random = Random();
-
   ModuleList({Key? key}) : super(key: key);
-    final List<IconData> financeIcons= sampleFinanceIcons; // List of icons
 
   @override
   Widget build(BuildContext context) {
     List<Widget> moduleTiles = chaptersList.map((chapter) {
-      // Get a random icon from the list
-      IconData icon = financeIcons[random.nextInt(financeIcons.length)];
       return ModuleTile(
-        icon: icon,
+        icon: chapter.icon, // Use the specific icon for each chapter
         title: 'Module ${chapter.number}',
         subtitle: chapter.name,
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => LessonPage(moduleNumber: chapter.name)), // Replace with actual lesson page
+            MaterialPageRoute(builder: (context) => LessonPage(moduleNumber: chapter.number)), // Ensure you are passing the right argument
           );
         },
       );
