@@ -10,7 +10,7 @@ class ModuleList extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> moduleTiles = chaptersList.map((chapter) {
       return ModuleTile(
-        icon: chapter.icon, // Use the specific icon for each chapter
+        icon: chapter.icon, 
         title: 'Module ${chapter.number}',
         subtitle: chapter.name,
         onTap: () {
