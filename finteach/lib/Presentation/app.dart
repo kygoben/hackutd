@@ -6,7 +6,6 @@ import 'package:finteach/Application/constants.dart';
 class ModuleList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Creating a list of ModuleTiles from the chaptersList
     List<Widget> moduleTiles = chaptersList.map((chapter) {
       return ModuleTile(title: 'Module ${chapter.number}', subtitle: chapter.name);
     }).toList();
@@ -18,17 +17,15 @@ class ModuleList extends StatelessWidget {
       body: ListView(
         children: moduleTiles, 
       ),
-      // Adding a FloatingActionButton
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigate to PracticePage when FAB is pressed
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => PracticePage()),
           );
         },
-        child: Icon(Icons.edit), // Set the icon for the button
-        tooltip: 'Practice', // Text shown when the user long presses the button
+        child: Icon(Icons.edit), 
+        tooltip: 'Practice', 
       ),
     );
   }
