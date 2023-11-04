@@ -15,7 +15,7 @@ class ModuleList extends StatelessWidget {
         title: Text('Modules'),
       ),
       body: ListView(
-        children: moduleTiles, // Using the dynamic list of ModuleTiles
+        children: moduleTiles, 
       ),
     );
   }
