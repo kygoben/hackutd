@@ -6,26 +6,37 @@ import 'package:finteach/Presentation/lesson_page.dart';
 class ModuleList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<Widget> moduleTiles = chaptersList.map((chapter) {
-      return ModuleTile(
-        title: 'Module ${chapter.number}', 
-        subtitle: chapter.name,
-        onTap: () {
+    // Initialize an empty list of widgets.
+    List<Widget> moduleTilesWithDividers = [];
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => LessonPage(moduleNumber: chapter.number,)), // Replace with actual lesson page
-          );
-        },
+    // Add ModuleTile and Divider to the list for each chapter.
+    chaptersList.forEach((chapter) {
+      // Add ModuleTile.
+      moduleTilesWithDividers.add(
+        ModuleTile(
+          title: 'Module ${chapter.number}',
+          subtitle: chapter.name,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LessonPage(moduleNumber: chapter.number,)), // Replace with actual lesson page
+            );
+          },
+        ),
       );
-    }).toList();
+
+      // Add a Divider for each ModuleTile except for the last one.
+      if (chapter != chaptersList.last) {
+        moduleTilesWithDividers.add(Divider());
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Modules'),
       ),
       body: ListView(
-        children: moduleTiles,
+        children: moduleTilesWithDividers,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
