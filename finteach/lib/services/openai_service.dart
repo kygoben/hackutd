@@ -9,7 +9,6 @@ class OpenAIService {
       String category, String topic, int level) async {
     final String _apiKey = dotenv.env['OPENAI_API_KEY'] ?? "fuck typing";
 
-
     String prompt = "";
 
     if (level == 1) {
@@ -23,11 +22,11 @@ class OpenAIService {
       Answer in the following JSON format: 
 
       {
-        questions: [
-        question: "string",
-        options: ["option 1", "option 2", "option 3", "option 4"]
-        answer: index of answer,
-      ]
+        questions: [{
+          question: "string",
+          options: ["option 1", "option 2", "option 3", "option 4"],
+          answer: index of answer
+        }]
       }
     ''';
     } else if (level == 2) {
@@ -41,11 +40,11 @@ class OpenAIService {
       Answer in the following JSON format: 
 
       {
-        questions: [
-        question: "string",
-        options: ["option 1", "option 2", "option 3", "option 4"]
-        answer: index of answer,
-      ]
+        questions: [{
+          question: "string",
+          options: ["option 1", "option 2", "option 3", "option 4"],
+          answer: index of answer
+        }]
       }
     ''';
     }
@@ -66,7 +65,6 @@ class OpenAIService {
         }),
       );
 
-      print(response.body);
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
