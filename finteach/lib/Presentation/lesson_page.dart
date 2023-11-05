@@ -118,14 +118,10 @@ Container(
         if (!_hasPressedCheck) {
           setState(() {
             if (selectedOptionIndex == questions[currentQuestionIndex].answerIndex) {
-              progressValue += 0.1;
+              progressValue += 1 / questions.length;
               _confettiController.play(); // Play confetti animation if correct
-                            progressValue += 1 / questions.length;
-
             } else {
               questions.add(questions[currentQuestionIndex]);
-              print('wrong'); // Print 'wrong' if incorrect
-
             }
             _hasPressedCheck = true; // Update the flag to indicate the check has been pressed
           });
