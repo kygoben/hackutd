@@ -29,10 +29,37 @@ class Question {
       })
       .toList();
   }
+
+  static Question fromJson(String str) {
+    final Map<String, dynamic> data = json.decode(str);
+
+    return Question(
+      question: data['question'],
+      options: List<String>.from(data['options']),
+      answerIndex: data['answer']
+    );
+  }
 }
 
 Future<List<Question>> loadQuestions(Chapters chapter) async {
-  String whatDidChatGPTSay = await OpenAIService().generateQuestions('', chapter.name, 1);
+  final OpenAIService ai = OpenAIService();
+  List<Future> futures = [
+    ai.generateQuestions('', chapter.name, 1),
+    ai.generateQuestions('', chapter.name, 1),
+    ai.generateQuestions('', chapter.name, 1),
+    ai.generateQuestions('', chapter.name, 1),
+    ai.generateQuestions('', chapter.name, 1),
+    ai.generateQuestions('', chapter.name, 1),
+    ai.generateQuestions('', chapter.name, 1),
+    ai.generateQuestions('', chapter.name, 1),
+    ai.generateQuestions('', chapter.name, 1),
+    ai.generateQuestions('', chapter.name, 1)
+  ];
+  List results = await Future.wait(futures);
   
-  return Question.parseQuestions(whatDidChatGPTSay);
+  return results
+    .map((result) {
+      return Question.fromJson(result);
+    })
+    .toList();
 }
