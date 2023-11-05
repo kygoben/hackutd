@@ -9,7 +9,7 @@ class LessonPage extends StatefulWidget {
   final Chapters chapter; // Corrected to 'Chapter'
 
   const LessonPage({Key? key, required this.title, required this.chapter})
-      : super(key: key);
+    : super(key: key);
 
   @override
   _LessonPageState createState() => _LessonPageState();
@@ -17,19 +17,17 @@ class LessonPage extends StatefulWidget {
 
 class _LessonPageState extends State<LessonPage> {
   int currentQuestionIndex = 0;
-  int currentQuestion = 1;
   double progressValue = 0;
-
   bool isDataLoaded = false;
   bool _hasPressedCheck = false;
-  int selectedOptionIndex = -1; // Add this to track selected option
+  int selectedOptionIndex = -1;
   List<Question> questions = [];
   final ConfettiController _confettiController =
       ConfettiController(duration: const Duration(seconds: 1)); // Add this
 
   @override
   void dispose() {
-    _confettiController.dispose(); // Add this to dispose of the controller
+    _confettiController.dispose();
     super.dispose();
   }
 
