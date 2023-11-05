@@ -49,6 +49,8 @@ class OpenAIService {
     ''';
     }
 
+    print(prompt);
+
     try {
       final response = await http.post(
         Uri.parse(_baseURL),
@@ -59,12 +61,11 @@ class OpenAIService {
         body: jsonEncode({
           "model": "gpt-3.5-turbo",
           "messages": [
-            {"role": "model", "content": "gpt response"},
             {"role": "user", "content": prompt}
           ]
         }),
       );
-
+      print(response);
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
