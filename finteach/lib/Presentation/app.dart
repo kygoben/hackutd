@@ -10,13 +10,13 @@ class ModuleList extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> moduleTiles = chaptersList.map((chapter) {
       return ModuleTile(
-        icon: chapter.icon, 
+        icon: chapter.icon,
         title: 'Module ${chapter.number}',
         subtitle: chapter.name,
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => LessonPage(moduleNumber: chapter.number)), // Ensure you are passing the right argument
+            MaterialPageRoute(builder: (context) => LessonPage(moduleNumber: chapter.number)),
           );
         },
       );
@@ -24,10 +24,24 @@ class ModuleList extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Modules'),
+        title: Text('Modules', style: TextStyle(color: Colors.black)), // Adjust the title color if needed
+        backgroundColor: Colors.white, // Sets the AppBar background to white
+        iconTheme: IconThemeData(color: Colors.black), // Adjust the AppBar icon color if needed
       ),
-      body: ListView(
-        children: moduleTiles,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.green, // Lighter green gradient
+              Color(0xFF11825C), // Darker green gradient
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: ListView(
+          children: moduleTiles,
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -36,7 +50,8 @@ class ModuleList extends StatelessWidget {
             MaterialPageRoute(builder: (context) => PracticePage()),
           );
         },
-        child: Icon(Icons.edit),
+        child: Icon(Icons.edit, color: Colors.black), // Adjust the FAB icon color if needed
+        backgroundColor: Colors.white, // Adjust the FAB color if needed
         tooltip: 'Practice',
       ),
     );
@@ -62,7 +77,7 @@ class ModuleTile extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.all(8.0),
       child: ListTile(
-        leading: Icon(icon), // Insert icon here
+        leading: Icon(icon),
         title: Text(title),
         subtitle: Text(subtitle),
         trailing: Icon(Icons.arrow_forward_ios),
