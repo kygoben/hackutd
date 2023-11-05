@@ -11,35 +11,35 @@ class ModuleList extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> moduleTiles = List.generate(chaptersList.length, (index) {
       final chapter = chaptersList[index];
-      bool isLeftAligned = index % 2 == 0;
 
-      double horizontalPadding = MediaQuery.of(context).size.width *
-          0.25; // Padding to determine how big boi the circle is
-      return Padding(
-        padding: EdgeInsets.only(
-          left: isLeftAligned ? horizontalPadding : horizontalPadding / 2,
-          right: !isLeftAligned ? horizontalPadding : horizontalPadding / 2,
-        ),
-        child: ModuleTile(
-          chapter: chapter,
-          title: 'Module ${index + 1}',
-          isLeftAligned: isLeftAligned,
-        ),
+      return ModuleTile(
+        chapter: chapter,
+        title: 'Module ${index + 1}',
+        subtitle: chapter.name,
       );
     });
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Modules', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white, // White AppBar
-        iconTheme: IconThemeData(color: Colors.black), // AppBar icon color
+        title: Text('FinTeach',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0,
+              letterSpacing: 1.2,
+            )),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.green, // Lighter green gradient
-              Color(0xFF11825C), // Darker green gradient
+              // Lighter green gradient
+              Colors.green,
+              // Darker green gradient
+              Color(0xFF11825C),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -56,7 +56,7 @@ class ModuleList extends StatelessWidget {
             MaterialPageRoute(builder: (context) => PracticePage()),
           );
         },
-        child: Icon(Icons.edit, color: Colors.black),
+        child: Icon(Icons.person, color: Colors.black),
         backgroundColor: Colors.white,
         tooltip: 'Practice',
       ),
@@ -64,147 +64,34 @@ class ModuleList extends StatelessWidget {
   }
 }
 
-class ModuleTile extends StatefulWidget {
-  final String title;
-  final bool isLeftAligned;
+class ModuleTile extends StatelessWidget {
   final Chapters chapter;
+  final String title;
+  final String subtitle;
 
   const ModuleTile({
     Key? key,
     required this.chapter,
     required this.title,
-    this.isLeftAligned = true,
+    required this.subtitle,
   }) : super(key: key);
 
   @override
-  _ModuleTileState createState() => _ModuleTileState();
-}
-
-class _ModuleTileState extends State<ModuleTile> {
-  OverlayEntry? _overlayEntry;
-
-  @override
-  void dispose() {
-    _overlayEntry?.remove();
-    super.dispose();
-  }
-
-  void _showModuleInfo(BuildContext context) {
-    _overlayEntry = _createOverlayEntry(context);
-    Overlay.of(context).insert(_overlayEntry!);
-  }
-
-  OverlayEntry _createOverlayEntry(BuildContext context) {
-    RenderBox renderBox = context.findRenderObject() as RenderBox;
-    var size = renderBox.size;
-    var offset = renderBox.localToGlobal(Offset.zero);
-
-    return OverlayEntry(
-      builder: (context) => GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () {
-          _overlayEntry?.remove();
-          _overlayEntry = null;
-        },
-        child: Stack(
-          children: [
-            Positioned(
-              left: offset.dx,
-              top: offset.dy +
-                  size.height +
-                  20.0, // Space for the speech bubble tail
-              width: size.width,
-              child: Material(
-                elevation: 4.0,
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(
-                        8), // Rounded corners for the pop-up box, jank fix
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(widget.title,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      SizedBox(height: 8),
-                      Text(widget.chapter.name),
-                      SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          _overlayEntry?.remove();
-                          _overlayEntry = null;
-
-                          // Here we push the LessonPage onto the navigation stack
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  LessonPage(title: widget.title, chapter: widget.chapter),
-                            ),
-                          );
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 24.0,
-                              vertical: 12.0), // Bigger button
-                          child: Text('START',
-                              style: TextStyle(fontSize: 20)), // Larger text
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.green, // Button background color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 32, vertical: 16), // Larger padding
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              left: offset.dx +
-                  (size.width / 2) -
-                  10, // Adjust this to center the tail
-              top: offset.dy + size.height,
-              child: Container(
-                width: 30, // Width of the tail
-                height: 20, // Height of the tail
-                child: CustomPaint(
-                  painter: _TrianglePainter(),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
-        if (_overlayEntry != null) {
-          // If an overlay is already visible, remove it, lol
-          _overlayEntry?.remove();
-          _overlayEntry = null;
-        } else {
-          // Show the module info
-          _showModuleInfo(context);
-        }
+        // Route to the LessonPage
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => LessonPage(title: title, chapter: chapter),
+          ),
+        );
       },
       child: Container(
-        width: 100,
-        height: 100,
         margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         decoration: BoxDecoration(
           color: Colors.white,
-          shape: BoxShape.circle,
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
               color: Colors.black26,
@@ -213,30 +100,50 @@ class _ModuleTileState extends State<ModuleTile> {
             ),
           ],
         ),
-        child: Icon(widget.chapter.icon, size: 50),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Icon(chapter.icon, size: 50),
+            ),
+            Expanded(
+              child: Text(subtitle,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.green, // Green circle
+                shape: BoxShape.circle, // Circular shape
+              ),
+              margin: const EdgeInsets.only(right: 16.0), // Right margin
+              padding: const EdgeInsets.all(
+                  8.0), // Add padding to make the circle larger
+              child: IconButton(
+                icon: Icon(Icons.arrow_forward_ios,
+                    color: Colors.white,
+                    size: 24.0), // White arrow icon with size specified
+                onPressed: () {
+                  // Route to the LessonPage
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          LessonPage(title: title, chapter: chapter),
+                    ),
+                  );
+                },
+                tooltip: 'Go to module', // Tooltip text
+                padding: EdgeInsets.zero, // Reduces the default padding
+                constraints: BoxConstraints(
+                  minWidth: 48, // Minimum width for the IconButton
+                  minHeight: 48, // Minimum height for the IconButton
+                ), // Use constraints to set the size
+              ),
+            ),
+            const SizedBox(width: 16), // For some spacing at the end
+          ],
+        ),
       ),
     );
-  }
-}
-
-class _TrianglePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.fill;
-
-    final path = Path()
-      ..moveTo(0, size.height)
-      ..lineTo(size.width / 2, 0)
-      ..lineTo(size.width, size.height)
-      ..lineTo(0, size.height);
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
   }
 }

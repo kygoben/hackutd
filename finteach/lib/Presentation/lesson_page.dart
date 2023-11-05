@@ -9,7 +9,8 @@ class LessonPage extends StatefulWidget {
   final String title;
   final Chapters chapter; // Corrected to 'Chapter'
 
-  const LessonPage({Key? key, required this.title, required this.chapter}) : super(key: key);
+  const LessonPage({Key? key, required this.title, required this.chapter})
+      : super(key: key);
 
   @override
   _LessonPageState createState() => _LessonPageState();
@@ -17,7 +18,11 @@ class LessonPage extends StatefulWidget {
 
 class _LessonPageState extends State<LessonPage> {
   int currentQuestionIndex = 0;
-  double progressValue = 0.1;
+  int currentQuestion = 1;
+  double progressValue = 0;
+
+  bool isDataLoaded = false;
+  String chatGptSaid = '';
   bool _hasPressedCheck = false;
   int selectedOptionIndex = -1; // Add this to track selected option
   List<Question> questions = loadQuestions();
@@ -112,8 +117,11 @@ Container(
           setState(() {
             if (selectedOptionIndex == questions[currentQuestionIndex].answerIndex) {
               _confettiController.play(); // Play confetti animation if correct
+                            progressValue += 1 / questions.length;
+
             } else {
               print('wrong'); // Print 'wrong' if incorrect
+
             }
             _hasPressedCheck = true; // Update the flag to indicate the check has been pressed
           });
@@ -123,7 +131,6 @@ Container(
           setState(() {
             if (currentQuestionIndex < questions.length - 1) {
               currentQuestionIndex++;
-              progressValue += 0.1;
               _hasPressedCheck = false; // Reset the check button state
               selectedOptionIndex = -1; // Reset the selected option
             } else {
