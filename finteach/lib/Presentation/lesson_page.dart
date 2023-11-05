@@ -1,10 +1,13 @@
 import 'package:finteach/Domain/chapter.dart';
+import 'package:finteach/Domain/question.dart';
 import 'package:finteach/services/openai_service.dart';
 import 'package:flutter/material.dart';
+import 'package:finteach/Application/constants.dart';
+import 'package:confetti/confetti.dart'; // Import the confetti package
 
 class LessonPage extends StatefulWidget {
   final String title;
-  final Chapters chapter;
+  final Chapters chapter; // Corrected to 'Chapter'
 
   const LessonPage({Key? key, required this.title, required this.chapter}) : super(key: key);
 
@@ -13,122 +16,143 @@ class LessonPage extends StatefulWidget {
 }
 
 class _LessonPageState extends State<LessonPage> {
-  int currentQuestion = 1;
+  int currentQuestionIndex = 0;
   double progressValue = 0.1;
+  bool _hasPressedCheck = false;
+  int selectedOptionIndex = -1; // Add this to track selected option
+  List<Question> questions = loadQuestions();
+  final ConfettiController _confettiController = ConfettiController(duration: const Duration(seconds: 1)); // Add this
 
-  Future<String> askChatGPT() async {
-    print('I am making the request');
-    return OpenAIService().generateQuestions('', widget.chapter.name, 1);
+  @override
+  void dispose() {
+    _confettiController.dispose(); // Add this to dispose of the controller
+    super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-
-    print(widget.chapter);
+    // Your existing code
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder<String>(
-      future: askChatGPT(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("I am loading idiot");
-        } else if (snapshot.hasError) {
-            return Text("Kyle wrote bad code that broke (the endpoint failed)");
-          } else {
-            return Column(
-              children: [
-                // Top bar with white background
-                Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildCloseButton(context),
-                      SizedBox(width: 8), // Added space before the progress bar
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: Stack(
+      children: [
+        Column(
+          children: [
+            // Top bar with white background
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildCloseButton(context),
+                  SizedBox(width: 8), // Added space before the progress bar
+                  Expanded(
+                    child: _buildProgressBar(),
+                  ),
+                  SizedBox(width: 16), // Increased space between the progress bar and the heart
+                  _buildHeartCount(context, heartCount: 5),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.green, // Lighter green gradient
+                      Color(0xFF11825C), // Darker green gradient
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+                child: SafeArea(
+                  top: false,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      SizedBox(height: 24),
+                      _buildCombinedCard(context, questions[currentQuestionIndex]), // Pass the current question
+                      SizedBox(height: 24),
                       Expanded(
-                        child: _buildProgressBar(),
+                        child: ListView.builder( // Use ListView.builder to build options
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          itemCount: questions[currentQuestionIndex].options.length, // Number of options for the current question
+                          itemBuilder: (context, index) {
+                            return _buildOption(context, questions[currentQuestionIndex].options[index], index); // Pass the option and its index
+                          },
+                        ),
                       ),
-                      SizedBox(
-                        width:
-                        16), // Increased space between the progress bar and the heart
-                      _buildHeartCount(context, heartCount: 5),
                     ],
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.green, // Lighter green gradient
-                          Color(0xFF11825C) // Darker green gradient
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                    ),
-                    child: SafeArea(
-                      top: false, // SafeArea is now only needed for bottom part
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          SizedBox(height: 24),
-                          _buildCombinedCard(context,
-                            'This is an example question, what is the answer for it?'),
-                          SizedBox(height: 24),
-                          Expanded(
-                            child: ListView(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              children: [
-                                _buildOption(context, 'Option 1'),
-                                _buildOption(context, 'Option 2'),
-                                _buildOption(context, 'Option 3'),
-                                _buildOption(context, 'Option 4'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                // Bottom bar with white background
-                Container(
-                  color: Colors.white,
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 32.0, vertical: 16.0),
-                        textStyle: const TextStyle(fontSize: 18),
-                      ),
-                      child: const Text('Next Question'),
-                      onPressed: () {
-                        setState(() {
-                          if (currentQuestion < 10) {
-                            currentQuestion++;
-                            progressValue += 0.2;
-                          }
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }
-      }
-    )
-    );
-  }
+              ),
+            ),
+            // Bottom bar with white background
+Container(
+  color: Colors.white,
+  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+  child: Center(
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: Colors.green,
+        padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+        textStyle: const TextStyle(fontSize: 18),
+      ),
+      // Change button text based on _hasPressedCheck
+      child: Text(_hasPressedCheck ? 'Next Question' : 'Check'),
+      onPressed: () {
+        if (!_hasPressedCheck) {
+          //If question is correct
+          setState(() {
+            if (selectedOptionIndex == questions[currentQuestionIndex].answerIndex) {
+              _confettiController.play(); // Play confetti animation if correct
+            } else {
+              print('wrong'); // Print 'wrong' if incorrect
+            }
+            _hasPressedCheck = true; // Update the flag to indicate the check has been pressed
+          });
+        } else {
+          
+          // If 'Next Question' is pressed
+          setState(() {
+            if (currentQuestionIndex < questions.length - 1) {
+              currentQuestionIndex++;
+              progressValue += 0.1;
+              _hasPressedCheck = false; // Reset the check button state
+              selectedOptionIndex = -1; // Reset the selected option
+            } else {
+              // Handle the end of the questions list, e.g., navigate away or show a score screen
+            }
+          });
+        }
+      },
+    ),
+  ),
+),
+
+          ],
+        ),
+        // Confetti
+        Align(
+          alignment: Alignment.center,
+          child: ConfettiWidget(
+            confettiController: _confettiController,
+            blastDirectionality: BlastDirectionality.explosive, // don't specify a direction, blast randomly
+            shouldLoop: false, // start again as soon as the animation is finished
+            colors: const [Colors.green, Colors.blue, Colors.pink, Colors.orange, Colors.purple], // manually specify the colors to be used
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 
   Widget _buildCloseButton(BuildContext context) {
     return IconButton(
@@ -157,20 +181,40 @@ class _LessonPageState extends State<LessonPage> {
     );
   }
 
-  Widget _buildOption(BuildContext context, String option) {
-    return Card(
-      color: Colors.white,
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      child: ListTile(
-        title: Text(option, style: const TextStyle(color: Colors.black)),
-        onTap: () {
-          // Handle option tap action
-        },
-      ),
-    );
+Widget _buildOption(BuildContext context, String option, int index) {
+  Color? _getOptionColor(int index) {
+    if (!_hasPressedCheck) {
+      // If the option is selected and check has not been pressed, make it grey
+      return selectedOptionIndex == index ? Colors.grey : Colors.white;
+    } else {
+      // If check has been pressed, use the answer logic colors
+      if (index == questions[currentQuestionIndex].answerIndex) {
+        return Colors.lightGreenAccent;
+      } else if (selectedOptionIndex == index && selectedOptionIndex != questions[currentQuestionIndex].answerIndex) {
+        return Colors.redAccent;
+      }
+    }
+    return Colors.white; // Default color when none of the above conditions meet
   }
 
-  Widget _buildCombinedCard(BuildContext context, String questionText) {
+  return Card(
+    color: _getOptionColor(index),
+    margin: const EdgeInsets.symmetric(vertical: 4),
+    child: ListTile(
+      title: Text(option, style: TextStyle(color: Colors.black)),
+      onTap: !_hasPressedCheck ? () {
+        setState(() {
+          // Only change the selection if the check hasn't been pressed
+          selectedOptionIndex = index;
+        });
+      } : null, // Disable tap if the check has been pressed
+    ),
+  );
+}
+
+
+
+  Widget _buildCombinedCard(BuildContext context, Question question) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Container(
@@ -181,12 +225,15 @@ class _LessonPageState extends State<LessonPage> {
             style: const TextStyle(fontSize: 14.0, color: Colors.black),
             children: <TextSpan>[
               TextSpan(
-                  text: 'Question $currentQuestion of 5\n',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400, color: Colors.grey)),
+                text: 'Question ${currentQuestionIndex + 1} of ${questions.length}\n', // Update the question count dynamically
+                style: TextStyle(
+                  fontWeight: FontWeight.w400, color: Colors.grey
+                ),
+              ),
               TextSpan(
-                  text: questionText,
-                  style: TextStyle(fontWeight: FontWeight.bold, height: 1.5)),
+                text: question.question, // Use the text from the Question object
+                style: TextStyle(fontWeight: FontWeight.bold, height: 1.5)
+              ),
             ],
           ),
         ),
