@@ -5,8 +5,7 @@ class LoadingIndicator extends StatefulWidget {
   _LoadingIndicatorState createState() => _LoadingIndicatorState();
 }
 
-class _LoadingIndicatorState extends State<LoadingIndicator>
-    with SingleTickerProviderStateMixin {
+class _LoadingIndicatorState extends State<LoadingIndicator> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -14,22 +13,22 @@ class _LoadingIndicatorState extends State<LoadingIndicator>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2), // The duration of a full spin cycle
+      duration: const Duration(seconds: 2),
     )..repeat();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue), // Color of the indicator
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
       ),
     );
   }
 
   @override
   void dispose() {
-    _controller.dispose(); // Don't forget to dispose of the controller
+    _controller.dispose();
     super.dispose();
   }
 }
