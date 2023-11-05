@@ -8,23 +8,25 @@ class ModuleList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> moduleTiles = chaptersList.asMap().entries.map((entry) {
-      final chapter = entry.value;
+    List<Widget> moduleTiles = List.generate(chaptersList.length, (index) {
+      final chapter = chaptersList[index];
+      bool isLeftAligned = index % 2 == 0;
 
-      return ModuleTile(
-        icon: chapter.icon,
-        title: 'Module ${entry.key + 1}',
-        subtitle: chapter.name,
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    LessonPage(moduleNumber: entry.key.toString())),
-          );
-        },
+      double horizontalPadding = MediaQuery.of(context).size.width *
+          0.25; // Padding to determine how big boi the circle is
+      return Padding(
+        padding: EdgeInsets.only(
+          left: isLeftAligned ? horizontalPadding : horizontalPadding / 2,
+          right: !isLeftAligned ? horizontalPadding : horizontalPadding / 2,
+        ),
+        child: ModuleTile(
+          icon: chapter.icon,
+          title: 'Module ${index + 1}',
+          subtitle: chapter.name,
+          isLeftAligned: isLeftAligned,
+        ),
       );
-    }).toList();
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -62,30 +64,113 @@ class ModuleList extends StatelessWidget {
   }
 }
 
-class ModuleTile extends StatelessWidget {
+class ModuleTile extends StatefulWidget {
   final IconData icon;
   final String title;
   final String subtitle;
-  final VoidCallback onTap;
+  final bool isLeftAligned;
 
   const ModuleTile({
     Key? key,
     required this.icon,
     required this.title,
     required this.subtitle,
-    required this.onTap,
+    this.isLeftAligned = true,
   }) : super(key: key);
 
   @override
+  _ModuleTileState createState() => _ModuleTileState();
+}
+
+class _ModuleTileState extends State<ModuleTile> {
+  OverlayEntry? _overlayEntry;
+
+  @override
+  void dispose() {
+    _overlayEntry?.remove();
+    super.dispose();
+  }
+
+  void _showModuleInfo(BuildContext context) {
+    _overlayEntry = _createOverlayEntry(context);
+    Overlay.of(context)?.insert(_overlayEntry!);
+  }
+
+  OverlayEntry _createOverlayEntry(BuildContext context) {
+    RenderBox renderBox = context.findRenderObject() as RenderBox;
+    var size = renderBox.size;
+    var offset = renderBox.localToGlobal(Offset.zero);
+
+    return OverlayEntry(
+      builder: (context) => Positioned(
+        left: offset.dx,
+        top: offset.dy + size.height + 5.0,
+        width: size.width,
+        child: Material(
+          elevation: 4.0,
+          child: Container(
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(widget.title,
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                SizedBox(height: 8),
+                Text(widget.subtitle),
+                SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () {
+                    _overlayEntry?.remove();
+                    _overlayEntry = null;
+                    // Navigate to the module
+                  },
+                  child: Text('Start'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors
+                        .green, // Button background color, could change if we want
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(8.0),
-      child: ListTile(
-        leading: Icon(icon),
-        title: Text(title),
-        subtitle: Text(subtitle),
-        trailing: Icon(Icons.arrow_forward_ios),
-        onTap: onTap,
+    return GestureDetector(
+      onTap: () {
+        if (_overlayEntry != null) {
+          // If an overlay is already visible, remove it, lol
+          _overlayEntry?.remove();
+          _overlayEntry = null;
+        } else {
+          // Show the module info
+          _showModuleInfo(context);
+        }
+      },
+      child: Container(
+        width: 100,
+        height: 100,
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Icon(widget.icon, size: 50),
       ),
     );
   }
