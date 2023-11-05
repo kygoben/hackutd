@@ -22,9 +22,8 @@ class _LessonPageState extends State<LessonPage> {
   bool _hasPressedCheck = false;
   int selectedOptionIndex = -1;
   List<Question> questions = [];
-  List<Question> wrongQuestions = [];
-  bool onFailedQuestions = false;
-  final ConfettiController _confettiController = ConfettiController(duration: const Duration(seconds: 1));
+  final ConfettiController _confettiController =
+      ConfettiController(duration: const Duration(seconds: 1)); // Add this
 
   @override
   void dispose() {
@@ -62,78 +61,104 @@ class _LessonPageState extends State<LessonPage> {
                     Expanded(
                       child: _buildProgressBar(),
                     ),
-                    SizedBox(width: 16), // Increased space between the progress bar and the heart
+                    SizedBox(
+                        width:
+                            16), // Increased space between the progress bar and the heart
                     _buildHeartCount(context, heartCount: 5),
                   ],
                 ),
               ),
               Expanded(
-                child: isDataLoaded ? Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.green, // Lighter green gradient
-                        Color(0xFF11825C), // Darker green gradient
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                  child: SafeArea(
-                    top: false,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        SizedBox(height: 24),
-                        _buildCombinedCard(context, questions[currentQuestionIndex]), // Pass the current question
-                        SizedBox(height: 24),
-                        Expanded(
-                          child: ListView.builder( // Use ListView.builder to build options
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                            itemCount: questions[currentQuestionIndex].options.length, // Number of options for the current question
-                            itemBuilder: (context, index) {
-                              return _buildOption(context, questions[currentQuestionIndex].options[index], index); // Pass the option and its index
-                            },
+                child: isDataLoaded
+                    ? Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.green, // Lighter green gradient
+                              Color(0xFF11825C), // Darker green gradient
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ) : LoadingIndicator(),
+                        child: SafeArea(
+                          top: false,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              SizedBox(height: 24),
+                              _buildCombinedCard(
+                                  context,
+                                  questions[
+                                      currentQuestionIndex]), // Pass the current question
+                              SizedBox(height: 24),
+                              Expanded(
+                                child: ListView.builder(
+                                  // Use ListView.builder to build options
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0),
+                                  itemCount: questions[currentQuestionIndex]
+                                      .options
+                                      .length, // Number of options for the current question
+                                  itemBuilder: (context, index) {
+                                    return _buildOption(
+                                        context,
+                                        questions[currentQuestionIndex]
+                                            .options[index],
+                                        index); // Pass the option and its index
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : LoadingIndicator(),
               ),
               // Bottom bar with white background
               Container(
                 color: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Center(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.green,
-                      padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                      textStyle: const TextStyle(fontSize: 18),
+                      primary: selectedOptionIndex != -1 ? Colors.green : Colors.grey,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 32.0, vertical: 16.0),
+                      textStyle: const TextStyle(fontSize: 18), onSurface: Colors.grey,
                     ),
                     // Change button text based on _hasPressedCheck
                     child: Text(_hasPressedCheck ? 'Next Question' : 'Check'),
                     onPressed: () {
                       if (!_hasPressedCheck) {
                         setState(() {
-                          if (selectedOptionIndex == questions[currentQuestionIndex].answerIndex) {
+                          if (selectedOptionIndex ==
+                              questions[currentQuestionIndex].answerIndex) {
+                            progressValue += 0.1;
+                            _confettiController
+                                .play(); // Play confetti animation if correct
                             progressValue += 1 / questions.length;
-                            _confettiController.play(); // Play confetti animation if correct
                           } else {
                             questions.add(questions[currentQuestionIndex]);
+                            print('wrong'); // Print 'wrong' if incorrect
                           }
-                          _hasPressedCheck = true; // Update the flag to indicate the check has been pressed
+                          _hasPressedCheck =
+                              true; // Update the flag to indicate the check has been pressed
                         });
                       } else {
                         // If 'Next Question' is pressed
                         setState(() {
                           if (currentQuestionIndex < questions.length - 1) {
                             currentQuestionIndex++;
-                            _hasPressedCheck = false; // Reset the check button state
-                            selectedOptionIndex = -1; // Reset the selected option
+                            _hasPressedCheck =
+                                false; // Reset the check button state
+                            selectedOptionIndex =
+                                -1; // Reset the selected option
                           } else {
                             // Handle the end of the questions list, e.g., navigate away or show a score screen
+                            _showCompletionDialog(context, _confettiController); // Call the function to show completion dialog
+                    _confettiController.play();
                           }
                         });
                       }
@@ -141,7 +166,6 @@ class _LessonPageState extends State<LessonPage> {
                   ),
                 ),
               ),
-
             ],
           ),
           // Confetti
@@ -149,16 +173,23 @@ class _LessonPageState extends State<LessonPage> {
             alignment: Alignment.center,
             child: ConfettiWidget(
               confettiController: _confettiController,
-              blastDirectionality: BlastDirectionality.explosive, // don't specify a direction, blast randomly
-              shouldLoop: false, // start again as soon as the animation is finished
-              colors: const [Colors.green, Colors.blue, Colors.pink, Colors.orange, Colors.purple], // manually specify the colors to be used
+              blastDirectionality: BlastDirectionality
+                  .explosive, // don't specify a direction, blast randomly
+              shouldLoop:
+                  false, // start again as soon as the animation is finished
+              colors: const [
+                Colors.green,
+                Colors.blue,
+                Colors.pink,
+                Colors.orange,
+                Colors.purple
+              ], // manually specify the colors to be used
             ),
           ),
         ],
       ),
     );
   }
-
 
   Widget _buildCloseButton(BuildContext context) {
     return IconButton(
@@ -196,11 +227,14 @@ class _LessonPageState extends State<LessonPage> {
         // If check has been pressed, use the answer logic colors
         if (index == questions[currentQuestionIndex].answerIndex) {
           return Colors.lightGreenAccent;
-        } else if (selectedOptionIndex == index && selectedOptionIndex != questions[currentQuestionIndex].answerIndex) {
-            return Colors.redAccent;
-          }
+        } else if (selectedOptionIndex == index &&
+            selectedOptionIndex !=
+                questions[currentQuestionIndex].answerIndex) {
+          return Colors.redAccent;
+        }
       }
-      return Colors.white; // Default color when none of the above conditions meet
+      return Colors
+          .white; // Default color when none of the above conditions meet
     }
 
     return Card(
@@ -208,17 +242,17 @@ class _LessonPageState extends State<LessonPage> {
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: ListTile(
         title: Text(option, style: TextStyle(color: Colors.black)),
-        onTap: !_hasPressedCheck ? () {
-          setState(() {
-            // Only change the selection if the check hasn't been pressed
-            selectedOptionIndex = index;
-          });
-        } : null, // Disable tap if the check has been pressed
+        onTap: !_hasPressedCheck
+            ? () {
+                setState(() {
+                  // Only change the selection if the check hasn't been pressed
+                  selectedOptionIndex = index;
+                });
+              }
+            : null, // Disable tap if the check has been pressed
       ),
     );
   }
-
-
 
   Widget _buildCombinedCard(BuildContext context, Question question) {
     return Card(
@@ -231,15 +265,15 @@ class _LessonPageState extends State<LessonPage> {
             style: const TextStyle(fontSize: 14.0, color: Colors.black),
             children: <TextSpan>[
               TextSpan(
-                text: 'Question ${currentQuestionIndex + 1} of ${questions.length}\n', // Update the question count dynamically
-                style: TextStyle(
-                  fontWeight: FontWeight.w400, color: Colors.grey
-                ),
+                text:
+                    'Question ${currentQuestionIndex + 1} of ${questions.length}\n', // Update the question count dynamically
+                style:
+                    TextStyle(fontWeight: FontWeight.w400, color: Colors.grey),
               ),
               TextSpan(
-                text: question.question, // Use the text from the Question object
-                style: TextStyle(fontWeight: FontWeight.bold, height: 1.5)
-              ),
+                  text: question
+                      .question, // Use the text from the Question object
+                  style: TextStyle(fontWeight: FontWeight.bold, height: 1.5)),
             ],
           ),
         ),
@@ -247,3 +281,42 @@ class _LessonPageState extends State<LessonPage> {
     );
   }
 }
+   void _showCompletionDialog(context, _confettiController) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // The user must tap the button to close the dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Congratulations!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Center(
+                  child: Text(
+                    "🏅",
+                    style: TextStyle(
+                      fontSize: 100, // Set a very large font size for the emoji
+                    ),
+                  ),
+                ),
+                const Text('You have completed all the questions!'),
+                const Text('Your progress has been amazing!'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Go Home'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop(); // Go back to the previous screen
+                _confettiController.stop(); // Stop the confetti when the dialog is closed
+              },
+            ),
+          ],
+        );
+      },
+    );
+    // Start the confetti loop when the dialog is shown
+    _confettiController.play();
+  }
