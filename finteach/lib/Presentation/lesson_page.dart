@@ -11,7 +11,7 @@ class LessonPage extends StatefulWidget {
 
 class _LessonPageState extends State<LessonPage> {
   int currentQuestion = 1;
-  double progressValue = 0.2;
+  double progressValue = 0.1;
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +90,7 @@ class _LessonPageState extends State<LessonPage> {
                 child: const Text('Next Question'),
                 onPressed: () {
                   setState(() {
-                    if (currentQuestion < 5) {
+                    if (currentQuestion < 10) {
                       currentQuestion++;
                       progressValue += 0.2;
                     }
