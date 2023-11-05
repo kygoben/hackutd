@@ -16,7 +16,7 @@ List<Chapters> chaptersList = [
   Chapters(name: 'Debt', icon: Icons.money_off),
 ];
 
-var rawData = {
+var rawData = [{
   "questions": [
     {
       "question": "What is a budget?",
@@ -38,12 +38,7 @@ var rawData = {
       ],
       "answer": 1
     },
-    
-  ]
-};
-
-/*
-{
+    {
       "question": "Which of the following is considered a liability?",
       "options": [
         "A car loan",
@@ -74,23 +69,10 @@ var rawData = {
       ],
       "answer": 1
     },
-    {
-      "question": "What is a credit score?",
-      "options": [
-        "A numerical representation of your investment knowledge",
-        "A score that measures your physical health",
-        "A numerical expression based on a level analysis of a person's credit files, to represent the creditworthiness of an individual",
-        "A score given to you at the beginning of a video game"
-      ],
-      "answer": 2
-    },
-    {
-      "question": "What is inflation?",
-      "options": [
-        "The increase in prices for services and goods over time",
-        "The interest rate on a loan",
-        "A type of investment strategy",
-        "The process of deflating something"
-      ],
-      "answer": 0
-    }*/
+
+    
+  ]
+}
+];
+
+
