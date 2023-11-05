@@ -14,119 +14,115 @@ class LessonPage extends StatefulWidget {
 
 class _LessonPageState extends State<LessonPage> {
   int currentQuestion = 1;
+  bool isDataLoaded = false;
+  String chatGptSaid = '';
   double progressValue = 0.1;
 
   Future<String> askChatGPT() async {
-    print('I am making the request');
     return OpenAIService().generateQuestions('', widget.chapter.name, 1);
   }
 
   @override
   void initState() {
     super.initState();
-
-    print(widget.chapter);
+    askChatGPT().then((value) {
+      setState(() {
+        chatGptSaid = value;
+        isDataLoaded = true;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<String>(
-      future: askChatGPT(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text("I am loading idiot");
-        } else if (snapshot.hasError) {
-            return Text("Kyle wrote bad code that broke (the endpoint failed)");
-          } else {
-            return Column(
+      body: !isDataLoaded
+      ? Text('I am loading idiot')
+      : Column(
+        children: [
+          // Top bar with white background
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Top bar with white background
-                Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildCloseButton(context),
-                      SizedBox(width: 8), // Added space before the progress bar
-                      Expanded(
-                        child: _buildProgressBar(),
-                      ),
-                      SizedBox(
-                        width:
-                        16), // Increased space between the progress bar and the heart
-                      _buildHeartCount(context, heartCount: 5),
-                    ],
-                  ),
-                ),
+                _buildCloseButton(context),
+                SizedBox(width: 8), // Added space before the progress bar
                 Expanded(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.green, // Lighter green gradient
-                          Color(0xFF11825C) // Darker green gradient
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                    ),
-                    child: SafeArea(
-                      top: false, // SafeArea is now only needed for bottom part
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          SizedBox(height: 24),
-                          _buildCombinedCard(context,
-                            'This is an example question, what is the answer for it?'),
-                          SizedBox(height: 24),
-                          Expanded(
-                            child: ListView(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              children: [
-                                _buildOption(context, 'Option 1'),
-                                _buildOption(context, 'Option 2'),
-                                _buildOption(context, 'Option 3'),
-                                _buildOption(context, 'Option 4'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  child: _buildProgressBar(),
                 ),
-                // Bottom bar with white background
-                Container(
-                  color: Colors.white,
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.green,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 32.0, vertical: 16.0),
-                        textStyle: const TextStyle(fontSize: 18),
-                      ),
-                      child: const Text('Next Question'),
-                      onPressed: () {
-                        setState(() {
-                          if (currentQuestion < 10) {
-                            currentQuestion++;
-                            progressValue += 0.2;
-                          }
-                        });
-                      },
-                    ),
-                  ),
-                ),
+                SizedBox(
+                  width:
+                  16), // Increased space between the progress bar and the heart
+                _buildHeartCount(context, heartCount: 5),
               ],
-            );
-          }
-      }
-    )
+            ),
+          ),
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.green, // Lighter green gradient
+                    Color(0xFF11825C) // Darker green gradient
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: SafeArea(
+                top: false, // SafeArea is now only needed for bottom part
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    SizedBox(height: 24),
+                    _buildCombinedCard(context,
+                      'This is an example question, what is the answer for it?'),
+                    SizedBox(height: 24),
+                    Expanded(
+                      child: ListView(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        children: [
+                          _buildOption(context, 'Option 1'),
+                          _buildOption(context, 'Option 2'),
+                          _buildOption(context, 'Option 3'),
+                          _buildOption(context, 'Option 4'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Bottom bar with white background
+          Container(
+            color: Colors.white,
+            padding:
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.green,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32.0, vertical: 16.0),
+                  textStyle: const TextStyle(fontSize: 18),
+                ),
+                child: const Text('Next Question'),
+                onPressed: () {
+                  setState(() {
+                    if (currentQuestion < 10) {
+                      currentQuestion++;
+                      progressValue += 0.2;
+                    }
+                  });
+                },
+              ),
+            ),
+          ),
+        ],
+      )
     );
   }
 
