@@ -8,15 +8,17 @@ class ModuleList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> moduleTiles = chaptersList.map((chapter) {
+    List<Widget> moduleTiles = chaptersList.asMap().entries.map((entry) {
+      final chapter = entry.value;
+      
       return ModuleTile(
         icon: chapter.icon,
-        title: 'Module ${chapter.number}',
+        title: 'Module ${entry.key + 1}',
         subtitle: chapter.name,
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => LessonPage(moduleNumber: chapter.number)),
+            MaterialPageRoute(builder: (context) => LessonPage(moduleNumber: entry.key.toString())),
           );
         },
       );
@@ -74,15 +76,20 @@ class ModuleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(8.0),
-      child: ListTile(
-        leading: Icon(icon),
-        title: Text(title),
-        subtitle: Text(subtitle),
-        trailing: Icon(Icons.arrow_forward_ios),
-        onTap: onTap,
+    return InkWell(
+      child: Card(
+        margin: const EdgeInsets.all(8.0),
+        child: ListTile(
+          leading: Icon(icon),
+          title: Text(title),
+          subtitle: Text(subtitle),
+          trailing: Icon(Icons.arrow_forward_ios),
+          onTap: onTap,
+        ),
       ),
+      onTap: () {
+        print('How are you doing?');
+      },
     );
   }
 }
