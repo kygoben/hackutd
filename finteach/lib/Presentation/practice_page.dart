@@ -29,7 +29,7 @@ class _PracticePageState extends State<PracticePage> {
       _isLoading = true;
     });
 
-    String response = await _openAIService.getResponse(_queryController.text);
+    String response = await _openAIService.generateQuestions('credit card', 'fraud', 1);
 
     setState(() {
       _response = response;
