@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 
-class LessonPage extends StatelessWidget {
+class LessonPage extends StatefulWidget {
   final String moduleNumber;
 
   const LessonPage({Key? key, required this.moduleNumber}) : super(key: key);
+
+  @override
+  _LessonPageState createState() => _LessonPageState();
+}
+
+class _LessonPageState extends State<LessonPage> {
+  int currentQuestion = 1;
+  double progressValue = 0.2;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +55,7 @@ class LessonPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     SizedBox(height: 24),
-                    _buildCombinedCard(context, 'Question 1 of 5',
+                    _buildCombinedCard(context,
                         'This is an example question, what is the answer for it?'),
                     SizedBox(height: 24),
                     Expanded(
@@ -76,14 +84,17 @@ class LessonPage extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.green,
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 32.0,
-                      vertical: 16.0), // Increased padding for a bigger button
-                  textStyle:
-                      const TextStyle(fontSize: 18), // Increased font size
+                      horizontal: 32.0, vertical: 16.0),
+                  textStyle: const TextStyle(fontSize: 18),
                 ),
-                child: Text('Next Question'),
+                child: const Text('Next Question'),
                 onPressed: () {
-                  // Handle next question action
+                  setState(() {
+                    if (currentQuestion < 5) {
+                      currentQuestion++;
+                      progressValue += 0.2;
+                    }
+                  });
                 },
               ),
             ),
@@ -104,7 +115,7 @@ class LessonPage extends StatelessWidget {
 
   Widget _buildProgressBar() {
     return LinearProgressIndicator(
-      value: 0.2, // Current progress
+      value: progressValue,
       backgroundColor: Colors.grey[300],
       valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
     );
@@ -133,8 +144,7 @@ class LessonPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCombinedCard(
-      BuildContext context, String questionNumber, String questionText) {
+  Widget _buildCombinedCard(BuildContext context, String questionText) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Container(
@@ -145,7 +155,7 @@ class LessonPage extends StatelessWidget {
             style: const TextStyle(fontSize: 14.0, color: Colors.black),
             children: <TextSpan>[
               TextSpan(
-                  text: '$questionNumber\n',
+                  text: 'Question $currentQuestion of 5\n',
                   style: TextStyle(
                       fontWeight: FontWeight.w400, color: Colors.grey)),
               TextSpan(
