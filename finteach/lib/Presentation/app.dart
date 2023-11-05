@@ -10,7 +10,7 @@ class ModuleList extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> moduleTiles = chaptersList.asMap().entries.map((entry) {
       final chapter = entry.value;
-      
+
       return ModuleTile(
         icon: chapter.icon,
         title: 'Module ${entry.key + 1}',
@@ -18,7 +18,9 @@ class ModuleList extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => LessonPage(moduleNumber: entry.key.toString())),
+            MaterialPageRoute(
+                builder: (context) =>
+                    LessonPage(moduleNumber: entry.key.toString())),
           );
         },
       );
@@ -26,9 +28,9 @@ class ModuleList extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Modules', style: TextStyle(color: Colors.black)), // Adjust the title color if needed
-        backgroundColor: Colors.white, // Sets the AppBar background to white
-        iconTheme: IconThemeData(color: Colors.black), // Adjust the AppBar icon color if needed
+        title: Text('Modules', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.white, // White AppBar
+        iconTheme: IconThemeData(color: Colors.black), // AppBar icon color
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -52,8 +54,8 @@ class ModuleList extends StatelessWidget {
             MaterialPageRoute(builder: (context) => PracticePage()),
           );
         },
-        child: Icon(Icons.edit, color: Colors.black), // Adjust the FAB icon color if needed
-        backgroundColor: Colors.white, // Adjust the FAB color if needed
+        child: Icon(Icons.edit, color: Colors.black),
+        backgroundColor: Colors.white,
         tooltip: 'Practice',
       ),
     );
@@ -77,14 +79,14 @@ class ModuleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        margin: const EdgeInsets.all(8.0),
-        child: ListTile(
-          leading: Icon(icon),
-          title: Text(title),
-          subtitle: Text(subtitle),
-          trailing: Icon(Icons.arrow_forward_ios),
-          onTap: onTap,
-        ),
-      );
+      margin: const EdgeInsets.all(8.0),
+      child: ListTile(
+        leading: Icon(icon),
+        title: Text(title),
+        subtitle: Text(subtitle),
+        trailing: Icon(Icons.arrow_forward_ios),
+        onTap: onTap,
+      ),
+    );
   }
 }
