@@ -17,7 +17,7 @@ class OpenAIService {
       Topic: ${topic}
       Difficulty: Hard
 
-      Generate 10 multiple choice questions with 4 answer choices. Also list the answer
+      Generate 1 multiple choice questions with 4 answer choices. Also list the answer
 
       Answer in the following JSON format: 
 
@@ -49,8 +49,6 @@ class OpenAIService {
     ''';
     }
 
-    print(prompt);
-
     try {
       final response = await http.post(
         Uri.parse(_baseURL),
@@ -65,7 +63,6 @@ class OpenAIService {
           ]
         }),
       );
-      print(response);
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
