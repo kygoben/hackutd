@@ -17,16 +17,17 @@ class OpenAIService {
       Topic: ${topic}
       Difficulty: Hard
 
-      Generate a multiple choice questions with 4 answer choices. Also list the answer
+      Generate 5 multiple choice questions with 4 answer choices. Also list the answer
 
       Answer in the following JSON format: 
 
       {
-
+      questions: [{
           question: "string",
           options: ["option 1", "option 2", "option 3", "option 4"],
           answer: index of answer
-        }
+        }]
+      }
     ''';
     } else if (level == 2) {
       prompt = '''

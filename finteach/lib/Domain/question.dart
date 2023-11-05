@@ -43,23 +43,7 @@ class Question {
 
 Future<List<Question>> loadQuestions(Chapters chapter) async {
   final OpenAIService ai = OpenAIService();
-  List<Future> futures = [
-    ai.generateQuestions('', chapter.name, 1),
-    ai.generateQuestions('', chapter.name, 1),
-    ai.generateQuestions('', chapter.name, 1),
-    ai.generateQuestions('', chapter.name, 1),
-    ai.generateQuestions('', chapter.name, 1),
-    ai.generateQuestions('', chapter.name, 1),
-    ai.generateQuestions('', chapter.name, 1),
-    ai.generateQuestions('', chapter.name, 1),
-    ai.generateQuestions('', chapter.name, 1),
-    ai.generateQuestions('', chapter.name, 1)
-  ];
-  List results = await Future.wait(futures);
+  String chat = await ai.generateQuestions('', chapter.name, 1);
   
-  return results
-    .map((result) {
-      return Question.fromJson(result);
-    })
-    .toList();
+  return Question.parseQuestions(chat);
 }
