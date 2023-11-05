@@ -3,10 +3,11 @@ import 'package:finteach/Presentation/app.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Ensures that you have bindings initialized before runApp
-  await dotenv.load(fileName: ".env"); // Make sure to call load on dotenv
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Bindings initialized before runApp
+  await dotenv.load(fileName: ".env"); // Call load on dotenv
 
-  runApp(MyApp()); // Replace with your actual app widget
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -14,9 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-
-      ),
+      theme: ThemeData(),
       home: ModuleList(),
     );
   }
