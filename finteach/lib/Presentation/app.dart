@@ -76,8 +76,7 @@ class ModuleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Card(
+    return Card(
         margin: const EdgeInsets.all(8.0),
         child: ListTile(
           leading: Icon(icon),
@@ -86,10 +85,6 @@ class ModuleTile extends StatelessWidget {
           trailing: Icon(Icons.arrow_forward_ios),
           onTap: onTap,
         ),
-      ),
-      onTap: () {
-        print('How are you doing?');
-      },
-    );
+      );
   }
 }
