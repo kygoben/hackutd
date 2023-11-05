@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/openai_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PracticePage extends StatefulWidget {
   @override
@@ -12,6 +13,16 @@ class _PracticePageState extends State<PracticePage> {
   bool _isLoading = false;
 
   final OpenAIService _openAIService = OpenAIService();
+
+  Future<void> saveDataLocally() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('test', _response);
+  }
+
+  Future<String?> getDataLocally() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('test');
+  }
 
   void _submitQuery() async {
     setState(() {
@@ -55,6 +66,19 @@ class _PracticePageState extends State<PracticePage> {
               child: SingleChildScrollView(
                 child: Text(_response),
               ),
+            ),
+            TextButton(
+              onPressed: () {
+                saveDataLocally();
+              },
+              child: Text('Save data')
+            ),
+            TextButton(
+              onPressed: () async {
+                String? data = await getDataLocally();
+                print(data);
+              },
+              child: Text('Print Data')
             ),
           ],
         ),
