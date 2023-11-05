@@ -26,12 +26,9 @@ class ModuleList extends StatelessWidget {
               color: Colors.black,
               fontWeight: FontWeight.bold,
               fontSize: 24.0,
-              letterSpacing:
-                  1.2, // Adjust the letter spacing for a logo-like effect
-              fontFamily:
-                  'YourCustomFont', // Replace with your custom font name
+              letterSpacing: 1.2,
             )),
-        centerTitle: true, // This centers the title in the AppBar
+        centerTitle: true,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
       ),
