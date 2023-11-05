@@ -3,13 +3,52 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class OpenAIService {
-final String _baseURL = 'https://api.openai.com/v1/chat/completions';
+  final String _baseURL = 'https://api.openai.com/v1/chat/completions';
 
-  Future<String> getResponse(String prompt) async {
-    print(prompt);
-    // String apiKey = dotenv.env['OPENAI_API_KEY'] ?? "Your_Default_API_Key_Here";
+  Future<String> generateQuestions(
+      String category, String topic, int level) async {
     final String _apiKey = dotenv.env['OPENAI_API_KEY'] ?? "fuck typing";
-    print(_apiKey);
+
+
+    String prompt = "";
+
+    if (level == 1) {
+      prompt = '''
+      Category: ${category}
+      Topic: ${topic}
+      Difficulty: Hard
+
+      Generate 10 multiple choice questions with 4 answer choices. Also list the answer
+
+      Answer in the following JSON format: 
+
+      {
+        questions: [
+        question: "string",
+        options: ["option 1", "option 2", "option 3", "option 4"]
+        answer: index of answer,
+      ]
+      }
+    ''';
+    } else if (level == 2) {
+      prompt = '''
+      Category: ${category}
+      Topic: ${topic}
+      Difficulty: Hard
+
+      Generate 10 multiple choice story based questions with 4 answer choices. Also list the answer
+
+      Answer in the following JSON format: 
+
+      {
+        questions: [
+        question: "string",
+        options: ["option 1", "option 2", "option 3", "option 4"]
+        answer: index of answer,
+      ]
+      }
+    ''';
+    }
 
     try {
       final response = await http.post(
@@ -20,7 +59,10 @@ final String _baseURL = 'https://api.openai.com/v1/chat/completions';
         },
         body: jsonEncode({
           "model": "gpt-3.5-turbo",
-          "messages": [{"role": "user", "content": prompt}]
+          "messages": [
+            {"role": "model", "content": "gpt response"},
+            {"role": "user", "content": prompt}
+          ]
         }),
       );
 
