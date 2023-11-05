@@ -1,3 +1,4 @@
+import 'package:finteach/Domain/chapter.dart';
 import 'package:finteach/Presentation/lesson_page.dart';
 import 'package:finteach/Presentation/practice_page.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class ModuleList extends StatelessWidget {
       final chapter = chaptersList[index];
 
       return ModuleTile(
-        icon: chapter.icon,
+        chapter: chapter,
         title: 'Module ${index + 1}',
         subtitle: chapter.name,
       );
@@ -55,13 +56,13 @@ class ModuleList extends StatelessWidget {
 }
 
 class ModuleTile extends StatelessWidget {
-  final IconData icon;
+  final Chapters chapter;
   final String title;
   final String subtitle;
 
   const ModuleTile({
     Key? key,
-    required this.icon,
+    required this.chapter,
     required this.title,
     required this.subtitle,
   }) : super(key: key);
@@ -74,7 +75,7 @@ class ModuleTile extends StatelessWidget {
         // Route to the LessonPage
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => LessonPage(moduleNumber: title),
+            builder: (context) => LessonPage(title: title, chapter: chapter),
           ),
         );
       },
@@ -98,7 +99,7 @@ class ModuleTile extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Icon(icon, size: 50),
+              child: Icon(chapter.icon, size: 50),
             ),
             Expanded(
               child: Text(subtitle,
