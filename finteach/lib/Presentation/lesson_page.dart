@@ -1,8 +1,7 @@
 import 'package:finteach/Domain/chapter.dart';
 import 'package:finteach/Domain/question.dart';
-import 'package:finteach/services/openai_service.dart';
+import 'package:finteach/Presentation/loading_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:finteach/Application/constants.dart';
 import 'package:confetti/confetti.dart'; // Import the confetti package
 
 class LessonPage extends StatefulWidget {
@@ -22,12 +21,12 @@ class _LessonPageState extends State<LessonPage> {
   double progressValue = 0;
 
   bool isDataLoaded = false;
-  String chatGptSaid = '';
   bool _hasPressedCheck = false;
   int selectedOptionIndex = -1; // Add this to track selected option
-  List<Question> questions = loadQuestions();
-  final ConfettiController _confettiController =
-      ConfettiController(duration: const Duration(seconds: 1));// Add this
+
+  List<Question> questions = [];
+  final ConfettiController _confettiController = ConfettiController(duration: const Duration(seconds: 1)); // Add this
+
 
   @override
   void dispose() {
@@ -38,7 +37,12 @@ class _LessonPageState extends State<LessonPage> {
   @override
   void initState() {
     super.initState();
-    // Your existing code
+    loadQuestions(widget.chapter).then((value) {
+      setState(() {
+        questions = value;
+        isDataLoaded = true;
+      });
+    });
   }
 
   @override
@@ -67,17 +71,18 @@ class _LessonPageState extends State<LessonPage> {
                   ],
                 ),
               ),
-              Expanded(
-                child: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.green, // Lighter green gradient
-                        Color(0xFF11825C), // Darker green gradient
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
+
+            ),
+            Expanded(
+              child: isDataLoaded ? Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.green, // Lighter green gradient
+                      Color(0xFF11825C), // Darker green gradient
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
                   child: SafeArea(
                     top: false,
@@ -111,8 +116,11 @@ class _LessonPageState extends State<LessonPage> {
                     ),
                   ),
                 ),
-              ),
-              // Bottom bar with white background
+
+              ) : LoadingIndicator(),
+            ),
+            // Bottom bar with white background
+
 Container(
   color: Colors.white,
   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
