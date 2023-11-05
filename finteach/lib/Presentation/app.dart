@@ -1,3 +1,4 @@
+import 'package:finteach/Domain/chapter.dart';
 import 'package:finteach/Presentation/lesson_page.dart';
 import 'package:finteach/Presentation/practice_page.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +21,8 @@ class ModuleList extends StatelessWidget {
           right: !isLeftAligned ? horizontalPadding : horizontalPadding / 2,
         ),
         child: ModuleTile(
-          icon: chapter.icon,
+          chapter: chapter,
           title: 'Module ${index + 1}',
-          subtitle: chapter.name,
           isLeftAligned: isLeftAligned,
         ),
       );
@@ -65,16 +65,14 @@ class ModuleList extends StatelessWidget {
 }
 
 class ModuleTile extends StatefulWidget {
-  final IconData icon;
   final String title;
-  final String subtitle;
   final bool isLeftAligned;
+  final Chapters chapter;
 
   const ModuleTile({
     Key? key,
-    required this.icon,
+    required this.chapter,
     required this.title,
-    required this.subtitle,
     this.isLeftAligned = true,
   }) : super(key: key);
 
@@ -93,7 +91,7 @@ class _ModuleTileState extends State<ModuleTile> {
 
   void _showModuleInfo(BuildContext context) {
     _overlayEntry = _createOverlayEntry(context);
-    Overlay.of(context)?.insert(_overlayEntry!);
+    Overlay.of(context).insert(_overlayEntry!);
   }
 
   OverlayEntry _createOverlayEntry(BuildContext context) {
@@ -132,7 +130,7 @@ class _ModuleTileState extends State<ModuleTile> {
                       Text(widget.title,
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       SizedBox(height: 8),
-                      Text(widget.subtitle),
+                      Text(widget.chapter.name),
                       SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () {
@@ -143,7 +141,7 @@ class _ModuleTileState extends State<ModuleTile> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) =>
-                                  LessonPage(moduleNumber: widget.title),
+                                  LessonPage(title: widget.title, chapter: widget.chapter),
                             ),
                           );
                         },
@@ -215,7 +213,7 @@ class _ModuleTileState extends State<ModuleTile> {
             ),
           ],
         ),
-        child: Icon(widget.icon, size: 50),
+        child: Icon(widget.chapter.icon, size: 50),
       ),
     );
   }
