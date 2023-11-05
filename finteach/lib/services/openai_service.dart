@@ -17,7 +17,7 @@ class OpenAIService {
       Topic: ${topic}
       Difficulty: Hard
 
-      Generate 1 multiple choice questions with 4 answer choices. Also list the answer
+      Generate 2 multiple choice questions with 4 answer choices. Also list the answer
 
       Answer in the following JSON format: 
 

@@ -1,33 +1,38 @@
-import 'package:finteach/Application/constants.dart';
+import 'dart:convert';
+import 'package:finteach/Domain/chapter.dart';
+import 'package:finteach/services/openai_service.dart';
+
 class Question {
   String question;
   List<String> options;
   int answerIndex;
 
-  Question({required this.question, required this.options, required this.answerIndex});
+  Question({
+    required this.question,
+    required this.options,
+    required this.answerIndex
+  });
 
-  factory Question.fromJson(Map<String, dynamic> json) {
-    return Question(
-      question: json['question'],
-      options: List<String>.from(json['options']),
-      answerIndex: json['answer'],
-    );
-  }
+  static List<Question> parseQuestions(String str) {
+    final Map<String, dynamic> data = json.decode(str);
+    final List<dynamic> questions = data['questions'];
 
-  Map<String, dynamic> toJson() {
-    return {
-      'question': question,
-      'options': options,
-      'answer': answerIndex,
-    };
+    return questions
+      .map((question) {
+        final Map<String, dynamic> questionJson = question;
+
+        return Question(
+          question: questionJson['question'],
+          options: List<String>.from(questionJson['options']),
+          answerIndex: questionJson['answer']
+        );
+      })
+      .toList();
   }
 }
 
-List<Question> loadQuestions() {
-  var newRawData =rawData;
-  List<Question> questions = [];
-  for (var questionData in newRawData['questions']!) {
-    questions.add(Question.fromJson(questionData));
-  }
-  return questions;
+Future<List<Question>> loadQuestions(Chapters chapter) async {
+  String whatDidChatGPTSay = await OpenAIService().generateQuestions('', chapter.name, 1);
+  
+  return Question.parseQuestions(whatDidChatGPTSay);
 }
