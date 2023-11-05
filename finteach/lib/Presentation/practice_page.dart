@@ -76,7 +76,6 @@ class _PracticePageState extends State<PracticePage> {
             TextButton(
               onPressed: () async {
                 String? data = await getDataLocally();
-                print(data);
               },
               child: Text('Print Data')
             ),
