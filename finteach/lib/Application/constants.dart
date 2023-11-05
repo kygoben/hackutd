@@ -194,7 +194,7 @@ var rawData = [{
       "answer": 2
     },
     {
-      "question": "Alex and Jamie are looking at a $250,000 house and are considering a 20% down payment. What would be the amount of their down payment?",
+      "question": "Alex and Jamie are looking at a \$250,000 house and are considering a 20% down payment. What would be the amount of their down payment?",
       "options": [
         "\$40,000",
         "\$50,000",
@@ -214,7 +214,7 @@ var rawData = [{
       "answer": 2
     },
     {
-      "question": "If Max's monthly gross income is $4,000 and his total monthly debts come to $600, what is the maximum monthly mortgage payment he could qualify for with a 28/36 qualifying ratio?",
+      "question": "If Max's monthly gross income is \$4,000 and his total monthly debts come to \$600, what is the maximum monthly mortgage payment he could qualify for with a 28/36 qualifying ratio?",
       "options": [
         "\$1,120",
         "\$1,440",
@@ -485,7 +485,7 @@ var rawData = [{
       "answer": 0
     },
     {
-      "question": "Sarah is considering an investment in a property that generates $120,000 in rental income annually. The operating expenses are 40% of the rental income, and the capitalization rate is 8%. What is the approximate value of the property using the income capitalization approach?",
+      "question": "Sarah is considering an investment in a property that generates \$120,000 in rental income annually. The operating expenses are 40% of the rental income, and the capitalization rate is 8%. What is the approximate value of the property using the income capitalization approach?",
       "options": [
         "\$1,500,000",
         "\$1,000,000",
@@ -495,7 +495,7 @@ var rawData = [{
       "answer": 0
     },
     {
-      "question": "A developer purchased a parcel of land for $2 million. If the land represents 25% of the total value of the project upon completion, what is the projected total value of the completed project?",
+      "question": "A developer purchased a parcel of land for \$2 million. If the land represents 25% of the total value of the project upon completion, what is the projected total value of the completed project?",
       "options": [
         "\$8 million",
         "\$10 million",
@@ -515,7 +515,7 @@ var rawData = [{
       "answer": 2
     },
     {
-      "question": "A real estate investor is looking at a property with a gross rent multiplier (GRM) of 10. The annual rent collected is $90,000. What is the value of the property based on the GRM?",
+      "question": "A real estate investor is looking at a property with a gross rent multiplier (GRM) of 10. The annual rent collected is \$90,000. What is the value of the property based on the GRM?",
       "options": [
         "\$900,000",
         "\$1,000,000",
@@ -525,7 +525,7 @@ var rawData = [{
       "answer": 0
     },
     {
-      "question": "After a natural disaster, a property owner's building is destroyed. She has insurance that covers replacement cost. If the building initially cost $500,000 to construct five years ago and the current inflation rate for construction costs is 4% per year, what is the minimum insurance payout she can expect?",
+      "question": "After a natural disaster, a property owner's building is destroyed. She has insurance that covers replacement cost. If the building initially cost \$500,000 to construct five years ago and the current inflation rate for construction costs is 4% per year, what is the minimum insurance payout she can expect?",
       "options": [
         "\$500,000",
         "\$608,328",
@@ -608,7 +608,7 @@ var rawData = [{
       "answer": 0
     },
     {
-      "question": "Carol's department was allocated $50,000 for the fiscal year. By the end of Q3, she had spent $37,500. Assuming her spending rate remains constant, how much over or under budget will she be by the end of Q4?",
+      "question": "Carol's department was allocated \$50,000 for the fiscal year. By the end of Q3, she had spent \$37,500. Assuming her spending rate remains constant, how much over or under budget will she be by the end of Q4?",
       "options": [
         "\$2,500 under budget",
         "\$2,500 over budget",
