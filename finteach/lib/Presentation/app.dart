@@ -70,9 +70,9 @@ class ModuleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      // Use InkWell for visual feedback on tap
+      // We can use dat InkWell for visual feedback on tap
       onTap: () {
-        // Route to the LessonPage
+        // Route to the LessonPage :)
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => LessonPage(title: title, chapter: chapter),
@@ -94,8 +94,8 @@ class ModuleTile extends StatelessWidget {
           ],
         ),
         child: Row(
-          mainAxisAlignment:
-              MainAxisAlignment.start, // Align items to the start of the row
+          mainAxisAlignment: MainAxisAlignment
+              .start, // Items get aligned to the start of the row
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -105,7 +105,7 @@ class ModuleTile extends StatelessWidget {
               child: Text(subtitle,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
-            const SizedBox(width: 16), // For some spacing at the end
+            const SizedBox(width: 16), // For extra some spacing at the end
           ],
         ),
       ),
