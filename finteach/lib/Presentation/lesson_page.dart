@@ -1,8 +1,13 @@
 import 'package:finteach/Domain/chapter.dart';
 import 'package:finteach/Domain/question.dart';
 import 'package:finteach/Presentation/loading_indicator.dart';
+import 'package:finteach/Application/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart'; // Import the confetti package
+int getChapterIndex(List<Chapters> chaptersList, String chapterTitle) {
+
+  return chaptersList.indexWhere((chapter) => chapter.name == chapterTitle);
+}
 
 class LessonPage extends StatefulWidget {
   final String title;
@@ -34,7 +39,7 @@ class _LessonPageState extends State<LessonPage> {
   @override
   void initState() {
     super.initState();
-    loadQuestions(widget.chapter).then((value) {
+    loadQuestions(widget.chapter, getChapterIndex(chaptersList, widget.chapter.name,)).then((value) {
       setState(() {
         questions = value;
         isDataLoaded = true;
@@ -69,8 +74,8 @@ class _LessonPageState extends State<LessonPage> {
                 ),
               ),
               Expanded(
-                child: isDataLoaded
-                    ? Container(
+                // child: isDataLoaded
+                    child: Container(
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
@@ -113,7 +118,7 @@ class _LessonPageState extends State<LessonPage> {
                           ),
                         ),
                       )
-                    : LoadingIndicator(),
+                    // : LoadingIndicator(),
               ),
               // Bottom bar with white background
               Container(

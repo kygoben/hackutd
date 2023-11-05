@@ -41,9 +41,10 @@ class Question {
   }
 }
 
-Future<List<Question>> loadQuestions(Chapters chapter) async {
+Future<List<Question>> loadQuestions(Chapters chapter,int index) async {
   final OpenAIService ai = OpenAIService();
-  String chat = await ai.generateQuestions('', chapter.name, 1);
+  String chat = await ai.generateQuestions('', chapter.name, index);
   
   return Question.parseQuestions(chat);
 }
+
