@@ -38,7 +38,12 @@ var rawData = {
       ],
       "answer": 1
     },
-    {
+    
+  ]
+};
+
+/*
+{
       "question": "Which of the following is considered a liability?",
       "options": [
         "A car loan",
@@ -88,6 +93,4 @@ var rawData = {
         "The process of deflating something"
       ],
       "answer": 0
-    }
-  ]
-};
+    }*/

@@ -113,20 +113,20 @@ Container(
       child: Text(_hasPressedCheck ? 'Next Question' : 'Check'),
       onPressed: () {
         if (!_hasPressedCheck) {
-          //If question is correct
           setState(() {
             if (selectedOptionIndex == questions[currentQuestionIndex].answerIndex) {
+              progressValue += 0.1;
               _confettiController.play(); // Play confetti animation if correct
                             progressValue += 1 / questions.length;
 
             } else {
+              questions.add(questions[currentQuestionIndex]);
               print('wrong'); // Print 'wrong' if incorrect
 
             }
             _hasPressedCheck = true; // Update the flag to indicate the check has been pressed
           });
         } else {
-          
           // If 'Next Question' is pressed
           setState(() {
             if (currentQuestionIndex < questions.length - 1) {
