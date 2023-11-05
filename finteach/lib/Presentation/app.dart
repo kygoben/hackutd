@@ -22,15 +22,17 @@ class ModuleList extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Modules', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white, // White AppBar
-        iconTheme: IconThemeData(color: Colors.black), // AppBar icon color
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
       ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.green, // Lighter green gradient
-              Color(0xFF11825C), // Darker green gradient
+              // Lighter green gradient
+              Colors.green,
+              // Darker green gradient
+              Color(0xFF11825C),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -70,7 +72,6 @@ class ModuleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      // We can use dat InkWell for visual feedback on tap
       onTap: () {
         // Route to the LessonPage :)
         Navigator.of(context).push(
@@ -84,7 +85,7 @@ class ModuleTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius:
-              BorderRadius.circular(16), // Rounded corners for the box
+              BorderRadius.circular(16), // Rounded corners for the box, pog
           boxShadow: [
             BoxShadow(
               color: Colors.black26,
@@ -95,7 +96,7 @@ class ModuleTile extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment
-              .start, // Items get aligned to the start of the row
+              .start, // Items get aligned to the start of the row with this bad boy
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -105,7 +106,7 @@ class ModuleTile extends StatelessWidget {
               child: Text(subtitle,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
-            const SizedBox(width: 16), // For extra some spacing at the end
+            const SizedBox(width: 16), // For extra some spacing at the end :)
           ],
         ),
       ),
