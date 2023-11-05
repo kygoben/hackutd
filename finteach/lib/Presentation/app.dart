@@ -102,42 +102,79 @@ class _ModuleTileState extends State<ModuleTile> {
     var offset = renderBox.localToGlobal(Offset.zero);
 
     return OverlayEntry(
-      builder: (context) => Positioned(
-        left: offset.dx,
-        top: offset.dy + size.height + 5.0,
-        width: size.width,
-        child: Material(
-          elevation: 4.0,
-          child: Container(
-            padding: EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
+      builder: (context) => Stack(
+        children: [
+          Positioned(
+            left: offset.dx,
+            top: offset.dy +
+                size.height +
+                20.0, // Space for the speech bubble tail
+            width: size.width,
+            child: Material(
+              elevation: 4.0,
               borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(widget.title,
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 8),
-                Text(widget.subtitle),
-                SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: () {
-                    _overlayEntry?.remove();
-                    _overlayEntry = null;
-                    // Navigate to the module
-                  },
-                  child: Text('Start'),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors
-                        .green, // Button background color, could change if we want
-                  ),
+              child: Container(
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(
+                      8), // Rounded corners for the pop-up box
                 ),
-              ],
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(widget.title,
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(height: 8),
+                    Text(widget.subtitle),
+                    SizedBox(height: 16), // More space before the button
+                    ElevatedButton(
+                      onPressed: () {
+                        _overlayEntry?.remove();
+                        _overlayEntry = null;
+
+                        // Here we push the LessonPage onto the navigation stack
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                LessonPage(moduleNumber: widget.title),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 24.0, vertical: 12.0), // Bigger button
+                        child: Text('START',
+                            style: TextStyle(fontSize: 20)), // Larger text
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green, // Button background color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 32, vertical: 16), // Larger padding
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
+          Positioned(
+            left: offset.dx +
+                (size.width / 2) -
+                10, // Adjust this to center the tail
+            top: offset.dy + size.height,
+            child: Container(
+              width: 30, // Width of the tail
+              height: 20, // Height of the tail
+              child: CustomPaint(
+                painter: _TrianglePainter(),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -173,5 +210,27 @@ class _ModuleTileState extends State<ModuleTile> {
         child: Icon(widget.icon, size: 50),
       ),
     );
+  }
+}
+
+class _TrianglePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+
+    final path = Path()
+      ..moveTo(0, size.height)
+      ..lineTo(size.width / 2, 0)
+      ..lineTo(size.width, size.height)
+      ..lineTo(0, size.height);
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
   }
 }
